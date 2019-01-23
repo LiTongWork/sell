@@ -26,6 +26,7 @@ module.exports = {
     // allow debugger during development
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     //忽略缩进
-    'indent':0
+    'indent':0,
+    'semi':0
   }
 }

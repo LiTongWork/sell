@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <v-header></v-header>
+    <v-header :seller="seller"></v-header>
     <div class="tab border-1px">
       <div class="tab-item">
         <router-link to="goods">商品</router-link>
@@ -18,10 +18,24 @@
 </template>
 
 <script>
-  import vHeader from './components/header/header'
-  import vFooter from './components/footer/footer'
+  import vHeader from './components/header/header';
+  import vFooter from './components/footer/footer';
+  const errok = 0;
 export default {
   name: 'App',
+  data () {
+    return {
+      seller: {}
+    }
+  },
+  created () {
+    this.$http.get('/api/seller').then((response) => {
+      // console.log(response);
+      if (response.body.erron === errok) {
+        this.seller = response.body.data;
+      }
+    })
+  },
   components: {
     'v-header': vHeader,
     'v-footer': vFooter
@@ -30,7 +44,7 @@ export default {
 </script>
 
 <style lang="stylus" rel="stylesheet/stylus">
-  @import "./common/stylus/mixin.styl"
+  @import './common/stylus/mixin.styl'
   #app
     .tab
       display: flex
