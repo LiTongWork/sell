@@ -22,6 +22,12 @@
         <i class="icon-right"></i>
       </div>
     </div>
+    <div class="bulletin-wrapper">
+      <span class="bulletin-title"></span>
+      <span class="bulletin-text">{{seller.bulletin}}</span>
+      <i class="icon-right"></i>
+    </div>
+    <img class="background" :src="seller.avatar" width="100%" height="100%" alt="">
   </div>
 </template>
 
@@ -42,8 +48,10 @@
 <style scoped lang="stylus" rel="stylesheet/stylus">
   @import '../../common/stylus/mixin.styl'
 .v-header
+  position: relative
   color: #fff
-  background-color: #ccc
+  background-color: rgba(7,17,27,.5)
+  overflow: hidden
   .content-wrapper
     position: relative
     padding: 24px 12px 18px 24px
@@ -105,4 +113,33 @@
       padding: 0 8px
       border-radius: 14px
       background-color: rgba(0,0,0,.2)
+  .bulletin-wrapper
+    position: relative
+    height: 28px
+    padding: 0 12px
+    overflow: hidden
+    text-overflow: ellipsis
+    white-space: nowrap
+    font-size: 10px
+    line-height 28px
+    background-color: rgba(7,17,27,.2)
+    .bulletin-title
+      vertical-align: middle
+      display: inline-block
+      width: 22px
+      height: 12px
+      bg-image(bulletin)
+      background-position: left center
+      background-size: 22px 12px
+      background-repeat: no-repeat
+    .icon-right
+      position: absolute
+      right: 10px
+      top: 10px
+  .background
+    position: absolute
+    left: 0
+    top: 0
+    z-index: -1
+    filter: blur(10px)
 </style>
