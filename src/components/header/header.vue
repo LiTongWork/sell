@@ -17,17 +17,20 @@
           <span class="text">{{seller.supports[0].description}}</span>
         </div>
       </div>
-      <div class="support-count" v-if="seller.supports">
+      <div class="support-count" v-if="seller.supports"  @click="showDetail">
         <span class="count">{{seller.supports.length}}个</span>
         <i class="icon-right"></i>
       </div>
     </div>
-    <div class="bulletin-wrapper">
+    <div class="bulletin-wrapper"  @click="showDetail">
       <span class="bulletin-title"></span>
       <span class="bulletin-text">{{seller.bulletin}}</span>
       <i class="icon-right"></i>
     </div>
     <img class="background" :src="seller.avatar" width="100%" height="100%" alt="">
+    <div class="detail" v-show="detailShow">
+
+    </div>
   </div>
 </template>
 
@@ -39,8 +42,18 @@
           type: Object
         }
       },
+      data() {
+        return {
+          detailShow: false
+        }
+      },
       created () {
         this.classMap = ['decrease', 'discount', 'special', 'guarantee', 'invoice']
+      },
+      methods: {
+        showDetail () {
+          this.detailShow = true
+        }
       }
     }
 </script>
@@ -142,4 +155,12 @@
     top: 0
     z-index: -1
     filter: blur(10px)
+  .detail
+    position: fixed
+    left: 0
+    top: 0
+    z-index: 100
+    width: 100%
+    height: 100%
+    background-color: rgba(7,17,27,.8)
 </style>
