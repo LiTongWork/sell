@@ -29,138 +29,199 @@
     </div>
     <img class="background" :src="seller.avatar" width="100%" height="100%" alt="">
     <div class="detail" v-show="detailShow">
-
+      <div class="detail-wrapper clearfix">
+        <div class="detail-main">
+          <h1 class="name">{{seller.name}}</h1>
+          <div class="star-wrapper">
+            <star :size="48" :score="seller.score"></star>
+          </div>
+          <div class="title">
+            <div class="line"></div>
+            <div class="text">优惠信息</div>
+            <div class="line"></div>
+          </div>
+        </div>
+      </div>
+      <div class="detail-close">
+        <i class="icon-close"></i>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-    export default {
-      name: 'v-header',
-      props: {
-        seller: {
-          type: Object
-        }
-      },
-      data() {
-        return {
-          detailShow: false
-        }
-      },
-      created () {
-        this.classMap = ['decrease', 'discount', 'special', 'guarantee', 'invoice']
-      },
-      methods: {
-        showDetail () {
-          this.detailShow = true
-        }
+  import Star from '../star/star'
+  export default {
+    name: 'v-header',
+    props: {
+      seller: {
+        type: Object
       }
+    },
+    data () {
+      return {
+        detailShow: false
+      }
+    },
+    created () {
+      this.classMap = ['decrease', 'discount', 'special', 'guarantee', 'invoice']
+    },
+    methods: {
+      showDetail () {
+        this.detailShow = true
+      }
+    },
+    components: {
+      Star
     }
+  }
 </script>
 
 <style scoped lang="stylus" rel="stylesheet/stylus">
   @import '../../common/stylus/mixin.styl'
-.v-header
-  position: relative
-  color: #fff
-  background-color: rgba(7,17,27,.5)
-  overflow: hidden
-  .content-wrapper
+  .v-header
     position: relative
-    padding: 24px 12px 18px 24px
-    font-size: 0
-    .avatar
-      display: inline-block
-      vertical-align: top
-      img
-        border-radius: 2px
-    .content
-      display inline-block
-      margin-left: 16px
-      .title
-        /*font-size:*/
-        margin: 2px 0 8px
-        .brand
-          display: inline-block
-          vertical-align: top
-          width: 30px
-          height: 18px
-          bg-image:(brand)
-          background-size: 30px 18px
-          background-repeat: no-repeat
-        .name
-          margin-left: 6px
-          font-size: 16px
-          font-weight: bold
-      .description
-        margin-bottom: 10px
-        font-size: 12px
-      .support
-        .icon
-          display: inline-block
-          vertical-align top
-          width: 12px
-          height: 12px
-          margin-right: 4px
-          background-size: 12px 12px
-          background-repeat: no-repeat
-          &.decrease
-            bg-image(decrease_1)
-          &.discount
-            bg-image(decrease_1)
-          &.guarantee
-            bg-image(guarantee_1)
-          &.invoice
-            bg-image(invoice_1)
-          &.special
-            bg-image(special_1)
-        .text
-          font-size: 10px
-    .support-count
-      position: absolute
-      right: 12px
-      bottom: 18px
-      font-size: 10px
-      height: 24px
-      line-height 24px
-      padding: 0 8px
-      border-radius: 14px
-      background-color: rgba(0,0,0,.2)
-  .bulletin-wrapper
-    position: relative
-    height: 28px
-    padding: 0 12px
+    color: #fff
+    background-color: rgba(7,17,27,.5)
     overflow: hidden
-    text-overflow: ellipsis
-    white-space: nowrap
-    font-size: 10px
-    line-height 28px
-    background-color: rgba(7,17,27,.2)
-    .bulletin-title
-      vertical-align: middle
-      display: inline-block
-      width: 22px
-      height: 12px
-      bg-image(bulletin)
-      background-position: left center
-      background-size: 22px 12px
-      background-repeat: no-repeat
-    .icon-right
+    .content-wrapper
+      position: relative
+      padding: 24px 12px 18px 24px
+      font-size: 0
+      .avatar
+        display: inline-block
+        vertical-align: top
+        img
+          border-radius: 2px
+      .content
+        display inline-block
+        margin-left: 16px
+        .title
+          /*font-size:*/
+          margin: 2px 0 8px
+          .brand
+            display: inline-block
+            vertical-align: top
+            width: 30px
+            height: 18px
+            bg-image:('brand')
+            background-size: 30px 18px
+            background-repeat: no-repeat
+          .name
+            margin-left: 6px
+            font-size: 16px
+            font-weight: bold
+        .description
+          margin-bottom: 10px
+          font-size: 12px
+        .support
+          .icon
+            display: inline-block
+            vertical-align top
+            width: 12px
+            height: 12px
+            margin-right: 4px
+            background-size: 12px 12px
+            background-repeat: no-repeat
+            &.decrease
+              bg-image('decrease_1')
+            &.discount
+              bg-image('discount_1')
+            &.guarantee
+              bg-image('guarantee_1')
+            &.invoice
+              bg-image('invoice_1')
+            &.special
+              bg-image('special_1')
+          .text
+            font-size: 10px
+      .support-count
+        position: absolute
+        right: 12px
+        bottom: 18px
+        font-size: 10px
+        height: 24px
+        line-height 24px
+        padding: 0 8px
+        border-radius: 14px
+        background-color: rgba(0,0,0,.2)
+    .bulletin-wrapper
+      position: relative
+      height: 28px
+      padding: 0 12px
+      overflow: hidden
+      text-overflow: ellipsis
+      white-space: nowrap
+      font-size: 10px
+      line-height 28px
+      background-color: rgba(7,17,27,.2)
+      .bulletin-title
+        vertical-align: middle
+        display: inline-block
+        width: 22px
+        height: 12px
+        bg-image('bulletin')
+        background-position: left center
+        background-size: 22px 12px
+        background-repeat: no-repeat
+      .icon-right
+        position: absolute
+        right: 10px
+        top: 10px
+    .background
       position: absolute
-      right: 10px
-      top: 10px
-  .background
-    position: absolute
-    left: 0
-    top: 0
-    z-index: -1
-    filter: blur(10px)
-  .detail
-    position: fixed
-    left: 0
-    top: 0
-    z-index: 100
-    width: 100%
-    height: 100%
-    background-color: rgba(7,17,27,.8)
+      left: 0
+      top: 0
+      z-index: -1
+      filter: blur(10px)
+    .detail
+      position: fixed
+      left: 0
+      top: 0
+      z-index: 100
+      width: 100%
+      height: 100%
+      background-color: rgba(7,17,27,.8)
+      overflow: auto
+      .detail-wrapper
+        width: 100%
+        min-height: 100%
+        display: inline-block
+        .detail-main
+          width: 100%
+          margin-top: 64px
+          padding-bottom: 64px
+          .name
+            font-size: 16px
+            line-height: 16px
+            font-weight: 700
+            color: #fff
+            text-align center
+          .star-wrapper
+            margin-top: 16px
+            padding: 2px 0
+            text-align: center
+          .title
+            display: flex
+            width: 80%
+            margin: 30px auto 24px auto
+            .line
+              flex: 1
+              position: relative
+              top: -7px
+              border-bottom: 1px solid rgba(255,255,255,.2)
+            .text
+              padding: 0 12px
+              font-size: 14px
+              font-weight: 700
+              line-height: 14px
+              color: rgb(255,255,255)
+      .detail-close
+        /*position: relative*/
+        width: 32px
+        height: 32px
+        text-align: center
+        margin: -64px auto 0 auto
+        clear: both
+        font-size: 28px
 </style>
