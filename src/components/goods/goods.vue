@@ -10,7 +10,32 @@
         </li>
       </ul>
     </div>
-    <div class="foods-wrapper"></div>
+    <div class="foods-wrapper">
+      <ul>
+        <li v-for="(item,index) in goods" class="food-list" :key="index">
+          <h1 class="title">{{item.name}}</h1>
+          <ul>
+            <li v-for="(food,index) in item.foods" class="food-item border-1px" :key="index">
+              <div class="icon">
+                <img :src="food.icon">
+              </div>
+              <div class="content">
+                <h2 class="name">{{food.name}}</h2>
+                <p class="desc">{{food.description}}</p>
+                <div class="extra">
+                  <span class="count">月售{{food.sellCount}}份</span>
+                  <span>好评率{{food.rating}}%</span>
+                </div>
+                <div class="price">
+                  <span class="new">￥{{food.price}}</span>
+                  <span v-show="food.oldPrice" class="old">￥{{food.oldPrice}}</span>
+                </div>
+              </div>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
   </div>
 </template>
 
@@ -85,5 +110,54 @@
             &.special
               bg-image('special_3')
   .foods-wrapper
-      flex: 1
+    flex: 1
+    overflow-y: auto
+    .title
+      padding-left: 12px
+      height: 26px
+      line-height: 26px
+      font-size: 12px
+      color: rgb(147,153,159)
+      background-color: #f3f5f7;
+      border-left: 2px solid #d9dde1
+    .food-item
+      display: flex
+      margin: 18px 18px 0
+      padding-bottom: 18px
+      border-1px(rgba(7,17,27,.1))
+      &:last-child
+        border-none()
+      .icon
+        flex: 0 0 57px
+        width: 57px
+        height: 57px
+        margin-right: 10px
+        img
+          width: 100%
+          height: 100%
+      .content
+        flex: 1
+        .name
+          font-size: 14px
+          line-height: 14px
+          color: rgb(7,17,27)
+          margin-top: 2px
+        .desc,.extra
+          font-size: 10px
+          line-height: 10px
+          color: rgb(147,153,159)
+          margin-top: 8px
+        .extra
+          .count
+            margin-right: 12px
+        .price
+          font-size: 14px
+          line-height: 14px
+          margin-top: 8px
+          color: red
+          .new
+            margin-right: 8px
+          .old
+            font-size: 10px
+            color: rgb(147,153,159)
 </style>
