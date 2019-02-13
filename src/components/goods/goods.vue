@@ -1,8 +1,8 @@
 <template>
   <div class="goods">
-    <div class="menu-wrapper">
+    <div class="menu-wrapper" ref="menuWrapper">
       <ul>
-        <li v-for="(item,index) in goods" :key="index" class="menu-item">
+        <li v-for="(item,index) in goods" :key="index" class="menu-item" :class="{'current':currentIndex===index}">
           <span class="text border-1px">
             <span v-show="item.type > 0" class="icon" :class="classMap[item.type]"></span>
             {{item.name}}
@@ -10,9 +10,9 @@
         </li>
       </ul>
     </div>
-    <div class="foods-wrapper">
+    <div class="foods-wrapper" ref="foodsWrapper">
       <ul>
-        <li v-for="(item,index) in goods" class="food-list" :key="index">
+        <li v-for="(item,index) in goods" class="food-list" :class="food-list-hook" :key="index">
           <h1 class="title">{{item.name}}</h1>
           <ul>
             <li v-for="(food,index) in item.foods" class="food-item border-1px" :key="index">
@@ -27,7 +27,7 @@
                   <span>好评率{{food.rating}}%</span>
                 </div>
                 <div class="price">
-                  <span class="new">￥{{food.price}}</span>
+                  <span class="now">￥{{food.price}}</span>
                   <span v-show="food.oldPrice" class="old">￥{{food.oldPrice}}</span>
                 </div>
               </div>
@@ -39,7 +39,8 @@
   </div>
 </template>
 
-<script>
+<script type="text/ecmascript-6">
+  import BScroll from 'better-scroll'
   const errok = 0;
   export default {
     name: 'goods',
@@ -50,16 +51,54 @@
     },
     data () {
       return {
-        goods: ''
+        goods: '',
+        listHeight: [],
+        scrollY: 0
       }
     },
     created () {
       this.$http.get('/api/goods').then((response) => {
         if (response.body.erron === errok) {
           this.goods = response.body.data;
+          this.$nextTick(() => {
+            this._initScroll();
+            this._calculateHeight();
+          })
         }
       });
       this.classMap = ['decrease', 'discount', 'special', 'guarantee', 'invoice']
+    },
+    computed: {
+      currentIndex () {
+        for (let i = 0; i < this.listHeight.length; i++) {
+          let height1 = this.listHeight[i];
+          let height2 = this.listHeight[i + 1];
+          if (!height2 || (this.scrollY > height1 && this.scrollY < height2)) {
+            return i
+          }
+        }
+        return 0
+      }
+    },
+    methods: {
+      _initScroll () {
+        this.menuScroll = new BScroll(this.$refs.menuWrapper, {});
+        this.foodScroll = new BScroll(this.$refs.foodsWrapper, {
+          probeType: 3
+        });
+        this.foodScroll.on('scroll', (pos) => {
+          this.scrollY = Math.abs(Math.round(pos.y));
+        })
+      },
+      _calculateHeight () {
+        let foodList = this.$refs.foodsWrapper.getElementsByClassName('food-list-hook');
+        let height = 0;
+        this.listHeight.push(height);
+        for (let i = 0; i < foodList.length; i++) {
+          let item = foodList[i];
+          height += item.clientHeight;
+        }
+      }
     }
   }
 </script>
@@ -77,8 +116,8 @@
       flex: 0 0 80px
       width: 80px
       background-color: #f3f5f7
-      overflow-x hidden
-      overflow-y: auto
+      /*overflow-x hidden*/
+      /*overflow-y: auto*/
       .menu-item
         display: table
         height: 54px
@@ -86,6 +125,8 @@
         line-height: 14px
         font-size: 14px
         margin-left: 12px
+        &.current
+          background-color: #fff
         .text
           display table-cell
           width: 56px
@@ -111,7 +152,7 @@
               bg-image('special_3')
   .foods-wrapper
     flex: 1
-    overflow-y: auto
+    /*overflow-y: auto*/
     .title
       padding-left: 12px
       height: 26px
@@ -144,7 +185,7 @@
           margin-top: 2px
         .desc,.extra
           font-size: 10px
-          line-height: 10px
+          line-height: 12px
           color: rgb(147,153,159)
           margin-top: 8px
         .extra
@@ -152,12 +193,16 @@
             margin-right: 12px
         .price
           font-size: 14px
-          line-height: 14px
           margin-top: 8px
-          color: red
-          .new
+          color: rgb(240,20,20)
+          .now
             margin-right: 8px
+            line-height: 14px
+            font-weight: 700
           .old
             font-size: 10px
+            line-height: 14px
+            font-weight: 700
             color: rgb(147,153,159)
+            text-decoration: line-through
 </style>
