@@ -202,6 +202,10 @@
       height: 100%
       background-color: rgba(7,17,27,.8)
       overflow: auto
+      &.fade-enter-active, &.fade-leave-active
+        transition: opacity .5s
+      &.fade-enter, &.fade-leave-to /* .fade-leave-active below version 2.1.8 */
+        opacity: 0
       .detail-wrapper
         width: 100%
         min-height: 100%
@@ -282,8 +286,4 @@
         clear: both
         font-size: 28px
         text-align: center
-    .fade-enter-active, .fade-leave-active
-      transition: opacity .5s
-    .fade-enter, .fade-leave-to /* .fade-leave-active below version 2.1.8 */
-      opacity: 0
 </style>

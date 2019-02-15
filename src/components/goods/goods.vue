@@ -2,7 +2,7 @@
   <div class="goods">
     <div class="menu-wrapper" ref="menuWrapper">
       <ul>
-        <li v-for="(item,index) in goods" :key="index" class="menu-item" :class="{'current':currentIndex===index}">
+        <li v-for="(item,index) in goods" :key="index" class="menu-item" :class="{'current':currentIndex===index}" @click="selectMenu(index)">
           <span class="text border-1px">
             <span v-show="item.type > 0" class="icon" :class="classMap[item.type]"></span>
             {{item.name}}
@@ -12,7 +12,7 @@
     </div>
     <div class="foods-wrapper" ref="foodsWrapper">
       <ul>
-        <li v-for="(item,index) in goods" class="food-list" :class="food-list-hook" :key="index">
+        <li v-for="(item,index) in goods" class="food-list food-list-hook" :key="index">
           <h1 class="title">{{item.name}}</h1>
           <ul>
             <li v-for="(food,index) in item.foods" class="food-item border-1px" :key="index">
@@ -30,17 +30,23 @@
                   <span class="now">￥{{food.price}}</span>
                   <span v-show="food.oldPrice" class="old">￥{{food.oldPrice}}</span>
                 </div>
+                <div class="cartcontrol-wrapper">
+                  <CartControl :food="food"></CartControl>
+                </div>
               </div>
             </li>
           </ul>
         </li>
       </ul>
     </div>
+    <ShopCart :select-foods="selectFoods" :delivery-price="seller.deliveryPrice" :min-price="seller.minPrice"></ShopCart>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
   import BScroll from 'better-scroll'
+  import ShopCart from '../shopcart/shopcart'
+  import CartControl from '../cartcontrol/cartcontrol'
   const errok = 0;
   export default {
     name: 'goods',
@@ -51,10 +57,14 @@
     },
     data () {
       return {
-        goods: '',
+        goods: [],
         listHeight: [],
         scrollY: 0
       }
+    },
+    components: {
+      ShopCart,
+      CartControl
     },
     created () {
       this.$http.get('/api/goods').then((response) => {
@@ -73,17 +83,32 @@
         for (let i = 0; i < this.listHeight.length; i++) {
           let height1 = this.listHeight[i];
           let height2 = this.listHeight[i + 1];
-          if (!height2 || (this.scrollY > height1 && this.scrollY < height2)) {
+          if (!height2 || (this.scrollY >= height1 && this.scrollY < height2)) {
+            // console.log(i);
             return i
           }
         }
         return 0
+      },
+      selectFoods () {
+        let foods = [];
+        this.goods.forEach((good) => {
+          good.foods.forEach((food) => {
+            if (food.count) {
+              foods.push(food);
+            }
+          })
+        });
+        return foods;
       }
     },
     methods: {
       _initScroll () {
-        this.menuScroll = new BScroll(this.$refs.menuWrapper, {});
+        this.menuScroll = new BScroll(this.$refs.menuWrapper, {
+          click: true
+        });
         this.foodScroll = new BScroll(this.$refs.foodsWrapper, {
+          click: true,
           probeType: 3
         });
         this.foodScroll.on('scroll', (pos) => {
@@ -97,7 +122,14 @@
         for (let i = 0; i < foodList.length; i++) {
           let item = foodList[i];
           height += item.clientHeight;
+          this.listHeight.push(height);
         }
+      },
+      selectMenu (index) {
+        let foodList = this.$refs.foodsWrapper.getElementsByClassName('food-list-hook');
+        let el = foodList[index];
+        this.foodScroll.scrollToElement(el, 260);
+        console.log(index)
       }
     }
   }
@@ -193,7 +225,7 @@
             margin-right: 12px
         .price
           font-size: 14px
-          margin-top: 8px
+          margin-top: 12px
           color: rgb(240,20,20)
           .now
             margin-right: 8px
@@ -205,4 +237,8 @@
             font-weight: 700
             color: rgb(147,153,159)
             text-decoration: line-through
+        .cartcontrol-wrapper
+          position: absolute
+          right: 0
+          bottom: 10px
 </style>
